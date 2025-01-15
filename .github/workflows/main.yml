@@ -1,0 +1,7 @@
+name: ETEREA.frontend.lista-service CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
