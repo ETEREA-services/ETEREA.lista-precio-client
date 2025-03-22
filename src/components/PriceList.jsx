@@ -1,37 +1,93 @@
 import { useState, useEffect } from 'react';
 import { articleService } from '../services/articleService';
+import { rubroService } from '../services/rubroService';
 import axios from 'axios';
 import './PriceList.css';
 
 function PriceList() {
   const [articles, setArticles] = useState([]);
+  const [rubros, setRubros] = useState([]);
+  const [currentRubroIndex, setCurrentRubroIndex] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentRubro, setCurrentRubro] = useState(null);
 
+  // Cargar rubros al inicio
   useEffect(() => {
-    loadArticles(currentPage);
-  }, [currentPage]);
+    loadRubros();
+  }, []);
 
+  // Efecto para cambiar de página/rubro cada 10 segundos
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentPage(current => (current + 1) % totalPages);
-    }, 10000);
+    if (rubros.length === 0) return;
 
+    const checkAndUpdatePage = async () => {
+      try {
+        const response = await articleService.getArticlesPaginatedByRubro(
+          rubros[currentRubroIndex]?.rubroId,
+          currentPage
+        );
+
+        // Si no hay artículos o la lista está vacía, pasar al siguiente rubro
+        if (!response.content || response.content.length === 0) {
+          setCurrentRubroIndex(current => (current + 1) % rubros.length);
+          setCurrentPage(0); // Reiniciar la página para el nuevo rubro
+          return;
+        }
+
+        setCurrentPage(current => current + 1);
+      } catch (error) {
+        console.error('Error en la paginación automática:', error);
+        // Si hay error, intentar con el siguiente rubro
+        setCurrentRubroIndex(current => (current + 1) % rubros.length);
+        setCurrentPage(0);
+      }
+    };
+
+    const timer = setInterval(checkAndUpdatePage, 10000);
     return () => clearInterval(timer);
-  }, [totalPages]);
+  }, [rubros, currentRubroIndex]);
+
+  // Efecto para cargar artículos cuando cambia el rubro o la página
+  useEffect(() => {
+    if (rubros.length > 0) {
+      const rubro = rubros[currentRubroIndex];
+      setCurrentRubro(rubro);
+      loadArticles(currentPage);
+      console.log('Cambiando a rubro:', rubro?.etiqueta);
+    }
+  }, [currentRubroIndex, currentPage, rubros]);
+
+  const loadRubros = async () => {
+    try {
+      const rubrosData = await rubroService.getRubros();
+      setRubros(rubrosData);
+      setError(null);
+    } catch (error) {
+      setError('Error al cargar los rubros');
+    }
+  };
 
   const loadArticles = async (page) => {
     try {
       setIsLoading(true);
-      const response = await articleService.getArticlesPaginated(page);
-      const validArticles = response.content.filter(item => item.shouldDisplay());
-      setArticles(validArticles);
-      setTotalPages(response.totalPages);
+      const currentRubroId = rubros[currentRubroIndex]?.rubroId;
+      if (!currentRubroId) return;
+
+      const response = await articleService.getArticlesPaginatedByRubro(currentRubroId, page);
+      
+      // Si no hay artículos en esta página, cambiar al siguiente rubro
+      if (!response.content || response.content.length === 0) {
+        setCurrentRubroIndex(current => (current + 1) % rubros.length);
+        setCurrentPage(0);
+        return;
+      }
+
+      setArticles(response.content);
       setError(null);
     } catch (error) {
-      let errorMessage = 'Error al cargar los artículos. Por favor, intente nuevamente.';
+      let errorMessage = 'Error al cargar los artículos';
       if (axios.isAxiosError(error)) {
         errorMessage = error.response?.data?.message || errorMessage;
       }
@@ -73,6 +129,13 @@ function PriceList() {
 
   return (
     <div className="price-list">
+      {currentRubro && (
+        <div className="rubro-header">
+          <div className="container">
+            <h2 className="rubro-title">{currentRubro.etiqueta}</h2>
+          </div>
+        </div>
+      )}
       <div className="container-fluid px-4 price-list-container">
         <div className="price-cards-container">
           <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3 g-md-4">

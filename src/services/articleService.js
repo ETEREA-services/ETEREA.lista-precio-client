@@ -19,6 +19,14 @@ export class ArticleService {
       const { data } = await axiosInstance.get(`/articuloListaPrecio/page`, {
         params: { page, size }
       });
+      
+      if (!data._embedded?.articuloListaPrecioList) {
+        if (page > 0) {
+          return this.getArticlesPaginated(0, size);
+        }
+        throw new Error('Formato de respuesta inválido');
+      }
+      
       return new PageResponse(data);
     } catch (error) {
       console.error('Error en articleService:', error);
@@ -32,6 +40,26 @@ export class ArticleService {
       return new PriceListItem(data);
     } catch (error) {
       console.error(`Error al obtener el artículo ${id}:`, error);
+      throw error;
+    }
+  }
+
+  async getArticlesPaginatedByRubro(rubroId, page = 0, size = PAGE_SIZE) {
+    try {
+      const { data } = await axiosInstance.get(`/articuloListaPrecio/rubro/${rubroId}/page`, {
+        params: { 
+          page, 
+          size
+        }
+      });
+      
+      if (!data._embedded?.articuloListaPrecioList) {
+        return new PageResponse({ _embedded: { articuloListaPrecioList: [] } });
+      }
+      
+      return new PageResponse(data);
+    } catch (error) {
+      console.error('Error en articleService:', error);
       throw error;
     }
   }

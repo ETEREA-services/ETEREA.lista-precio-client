@@ -1,7 +1,27 @@
+.rubro-header {
+  background-color: #2B4C7E;  /* Azul oscuro */
+  padding: 0.75rem 0;
+  width: 100%;
+  position: sticky;
+  top: 60px;  /* Ajustar según la altura de tu header principal */
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.rubro-title {
+  color: white;
+  text-align: center;
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
 .price-list {
   background-color: #4682B4;
-  min-height: calc(100vh - 60px);
-  padding: 1rem 0;
+  min-height: calc(100vh - 120px); /* Ajustar para considerar ambos headers */
+  padding: 0 0 1rem 0; /* Quitar el padding superior */
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -11,7 +31,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  height: 100%;
+  padding-top: 1rem; /* Mover el padding aquí */
 }
 
 .price-cards-container {
