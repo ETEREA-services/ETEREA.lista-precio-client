@@ -1,0 +1,6 @@
+stateDiagram-v2
+    [*] --> Cargando
+    Cargando --> Cargado : Éxito
+    Cargando --> Error : Fallo
+    Cargado --> [*]
+    Error --> Cargando : Reintentar

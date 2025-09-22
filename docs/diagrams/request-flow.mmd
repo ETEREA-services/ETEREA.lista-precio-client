@@ -1,0 +1,11 @@
+sequenceDiagram
+    participant User
+    participant ReactApp
+    participant ArticleService
+    participant RubroService
+    User->>ReactApp: Solicita lista de precios
+    ReactApp->>ArticleService: Consulta artículos
+    ArticleService-->>ReactApp: Datos de artículos
+    ReactApp->>RubroService: Consulta rubros
+    RubroService-->>ReactApp: Datos de rubros
+    ReactApp-->>User: Muestra lista de precios
