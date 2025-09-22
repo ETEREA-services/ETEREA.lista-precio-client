@@ -14,8 +14,10 @@ export class RubroService {
   async getRubros() {
     try {
       const { data } = await axiosInstance.get('/rubroListaPrecio/');
+      console.log("getRubros -> ", data);
       // Transformar la respuesta HAL en objetos Rubro
-      const rubros = data._embedded?.rubroListaPrecioList || [];
+      const rubros = data._embedded?.rubroListaPrecioDtoList || [];
+      console.log("rubros -> ", rubros);
       return rubros.map(rubro => new Rubro(rubro)).filter(rubro => rubro.publicar);
     } catch (error) {
       console.error('Error en rubroService:', error);
