@@ -62,6 +62,7 @@ function PriceList() {
   const loadRubros = async () => {
     try {
       const rubrosData = await rubroService.getRubros();
+      console.log("loadRubros -> ", rubrosData);
       setRubros(rubrosData);
       setError(null);
     } catch (error) {
@@ -76,6 +77,7 @@ function PriceList() {
       if (!currentRubroId) return;
 
       const response = await articleService.getArticlesPaginatedByRubro(currentRubroId, page);
+      console.log(response)
       
       // Si no hay artículos en esta página, cambiar al siguiente rubro
       if (!response.content || response.content.length === 0) {

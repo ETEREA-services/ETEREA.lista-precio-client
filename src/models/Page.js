@@ -3,7 +3,7 @@ import { PriceListItem } from './Article';
 export class PageResponse {
   constructor(data) {
     // Extraer la lista de artículos del _embedded
-    this.content = data._embedded?.articuloListaPrecioList?.map(item => new PriceListItem(item)) || [];
+    this.content = data._embedded?.articuloListaPrecioDtoList?.map(item => new PriceListItem(item)) || [];
     
     // Extraer información de paginación de los links
     const lastLink = data._links?.last?.href || '';

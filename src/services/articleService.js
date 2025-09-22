@@ -52,11 +52,12 @@ export class ArticleService {
           size
         }
       });
-      
-      if (!data._embedded?.articuloListaPrecioList) {
-        return new PageResponse({ _embedded: { articuloListaPrecioList: [] } });
+
+      if (!data._embedded?.articuloListaPrecioDtoList) {
+        return new PageResponse({ _embedded: { articuloListaPrecioDtoList: [] } });
       }
-      
+      console.log("getArticlesPaginatedByRubro -> ", data);
+
       return new PageResponse(data);
     } catch (error) {
       console.error('Error en articleService:', error);
