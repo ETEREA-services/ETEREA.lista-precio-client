@@ -2,7 +2,7 @@ import axios from 'axios';
 import BACKEND from '../config';
 
 const axiosInstance = axios.create({
-  baseURL: `${BACKEND}/core`,
+  baseURL: `${BACKEND}/lista/precio`,
   timeout: 5000,
   headers: {
     'Content-Type': 'application/json'

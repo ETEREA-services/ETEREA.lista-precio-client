@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # ETEREA Lista Precio Client
 
 ![React](https://img.shields.io/badge/React-18.3.1-61DAFB?style=flat&logo=react)
@@ -97,3 +98,6 @@ Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más det
 ## Versión
 
 Versión actual: 1.0.0
+=======
+# ETEREA.lista-precio-client
+>>>>>>> 53f541b (previo al nginx)
