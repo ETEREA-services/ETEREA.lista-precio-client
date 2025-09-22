@@ -1,8 +1,3 @@
-<<<<<<< Updated upstream
-# ETEREA.frontend.lista-service
-
-[![ETEREA.frontend.lista-service CI](https://github.com/ETEREA-services/ETEREA.frontend.lista-service/actions/workflows/main.yml/badge.svg)](https://github.com/ETEREA-services/ETEREA.frontend.lista-service/actions/workflows/main.yml)
-=======
 # ETEREA Lista Precio Client
 
 ![React](https://img.shields.io/badge/React-18.3.1-61DAFB?style=flat&logo=react)
@@ -102,4 +97,3 @@ Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más det
 ## Versión
 
 Versión actual: 1.0.0
->>>>>>> Stashed changes
