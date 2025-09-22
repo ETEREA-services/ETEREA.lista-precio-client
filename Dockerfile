@@ -1,24 +1,21 @@
-# Build stage
-FROM node:22-alpine
-
+# Etapa 1: Construir la aplicación de React
+FROM node:18-alpine AS builder
 WORKDIR /app
-
-# Copiar archivos de configuración
 COPY package*.json ./
-COPY vite.config.js ./
-
-# Instalar dependencias
 RUN npm install
-
-# Copiar código fuente
 COPY . .
+# La variable de entorno VITE_BACKEND es necesaria durante la compilación
+# para que el código de React sepa a qué endpoint llamar.
+ARG VITE_BACKEND=/api
+ENV VITE_BACKEND=${VITE_BACKEND}
+RUN npm run build
 
-# Variables de entorno con valores por defecto
-ENV VITE_BACKEND=/api
-ENV VITE_PORT=5173
-
-# Exponer el puerto de Vite
-EXPOSE ${VITE_PORT}
-
-# Usar Vite en modo desarrollo
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"] 
+# Etapa 2: Servir la aplicación con Nginx
+FROM nginx:1.25-alpine
+# Copiar los archivos estáticos construidos de la etapa anterior
+COPY --from=builder /app/dist /usr/share/nginx/html
+# Copiar la configuración personalizada de Nginx
+COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
+# Exponer el puerto 80, que es el que Nginx escucha por defecto
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
